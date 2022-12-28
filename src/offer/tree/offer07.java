@@ -5,7 +5,7 @@ import org.junit.Test;
 
 import java.util.HashMap;
 
-public class 重建二叉树07 {
+public class offer07 {
 
     HashMap<Integer, Integer> map = new HashMap<>();
     public TreeNode buildTree(int[] preorder, int[] inorder) {
@@ -20,13 +20,20 @@ public class 重建二叉树07 {
 
     private TreeNode help(int[] preorder, int left, int right, int[] inorder, int left2, int right2) {
         //递归退出条件
+        if(left > right || left2 > right2)
+            return null;
 
         int rootVal = preorder[left];
         TreeNode root = new TreeNode(rootVal);
         Integer rootIdx = map.get(rootVal);
+        /*
+        根据左右子树节点的个数确定，rootIdx是中序遍历中root节点的idx，那么idx左边的就是左子树的节点个数，idx右边的就是右子树的节点个数
+        左子树中左右指针的确定:rootIdx - 1 - right2 + 1 = X - (left + 1) + 1  -> X = rootIdx-left2+left
+        左子树中左右指针的确定:right2 - (rootIdx + 1) + 1 = right - X + 1 -> X = right + rootIdx + 1 - right2
+         */
         root.left = help(preorder, left+1, rootIdx-left2+left, inorder, left2, rootIdx-1);
         root.right = help(preorder, right - right2 + rootIdx+1, right, inorder, rootIdx+1, right2);
-        return null;
+        return root;
     }
 
 
